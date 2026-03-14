@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Интерференция: Векторная модель</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #050505;
+            color: white; font-family: sans-serif;
+        }
+
+        #orientation-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1a1a; z-index: 2000; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
+        @media (orientation: portrait) { #orientation-overlay { display: flex; } }
+
+        canvas { display: block; width: 100vw; height: 100vh; }
+
+        #menu-toggle {
+            position: fixed; top: 15px; right: 15px;
+            z-index: 1001; background: #333; border: none;
+            color: white; padding: 10px; border-radius: 5px; cursor: pointer;
+            font-size: 20px;
+        }
+
+        #side-menu {
+            position: fixed; top: 0; right: -320px; width: 280px; height: 100%;
+            background: rgba(20, 20, 20, 0.98); transition: 0.3s;
+            z-index: 1000; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            overflow-y: auto; border-left: 1px solid #444;
+        }
+        #side-menu.open { right: 0; }
+
+        .control-block { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .block-title { font-size: 13px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .control-group { margin-bottom: 10px; }
+        
+        label { display: block; font-size: 11px; color: #aaa; margin-bottom: 3px; }
+        input[type=range] { width: 100%; cursor: pointer; }
+        .val { font-size: 11px; color: #3498db; float: right; }
+        
+        .w1 { color: #ff4d4d; }
+        .w2 { color: #3498db; }
+        .res { color: #a29bfe; }
+
+        .mode-toggle {
+            background: #222; padding: 10px; border-radius: 5px; margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 12px; cursor: pointer; border: 1px solid #444;
+        }
+        .mode-toggle.active { background: #2980b9; border-color: #3498db; }
+    </style>
+</head>
+<body>
+
+    <div id="orientation-overlay">
+        <h2>🔄 Переверните устройство</h2>
+    </div>
+
+    <button id="menu-toggle">⚙️</button>
+
+    <div id="side-menu">
+        <h3 style="margin-top: 0;">Настройки</h3>
+        
+        <div id="coherent-btn" class="mode-toggle">
+            Когерентный свет <span>OFF</span>
+        </div>
+
+        <!-- Волна 1 -->
+        <div class="control-block">
+            <div class="block-title w1">Волна 1 (Верх)</div>
+            <div class="control-group">
+                <label>Частота ω: <span class="val" id="f1-v">3.0</span></label>
+                <input type="range" id="f1" min="0" max="8" step="0.1" value="3.0">
+            </div>
+            <div class="control-group">
+                <label>Показатель n₁: <span class="val" id="n1-v">1.0</span></label>
+                <input type="range" id="n1" min="1" max="4" step="0.1" value="1.0">
+            </div>
+        </div>
+
+        <!-- Волна 2 -->
+        <div class="control-block" id="w2-block">
+            <div class="block-title w2">Волна 2 (Низ)</div>
+            <div class="control-group" id="f2-group">
+                <label>Частота ω₂: <span class="val" id="f2-v">3.2</span></label>
+                <input type="range" id="f2" min="0" max="8" step="0.1" value="3.2">
+            </div>
+            <div class="control-group" id="phase-group" style="display:none;">
+                <label>Сдвиг фазы Δφ: <span class="val" id="ph-v">0°</span></label>
+                <input type="range" id="phase" min="0" max="360" step="1" value="0">
+            </div>
+            <div class="control-group">
+                <label>Показатель n₂: <span class="val" id="n2-v">1.0</span></label>
+                <input type="range" id="n2" min="1" max="4" step="0.1" value="1.0">
+            </div>
+        </div>
+
+        <div class="control-block">
+            <div class="block-title">Симуляция</div>
+            <div class="control-group">
+                <label>Скорость анимации: <span class="val" id="ts-v">0.5</span></label>
+                <input type="range" id="timeScale" min="0" max="2" step="0.05" value="0.5">
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const menu = document.getElementById('side-menu');
+    const toggle = document.getElementById('menu-toggle');
+    const cohBtn = document.getElementById('coherent-btn');
+
+    let coherentMode = false;
+
+    toggle.onclick = () => menu.classList.toggle('open');
+    cohBtn.onclick = () => {
+        coherentMode = !coherentMode;
+        cohBtn.classList.toggle('active', coherentMode);
+        cohBtn.querySelector('span').innerText = coherentMode ? "ON" : "OFF";
+        document.getElementById('f2-group').style.display = coherentMode ? 'none' : 'block';
+        document.getElementById('phase-group').style.display = coherentMode ? 'block' : 'none';
+        document.querySelector('.w2').innerText = coherentMode ? "Волна 2 (Сдвиг)" : "Волна 2 (Низ)";
+    };
+
+    const inpt = {
+        f1: document.getElementById('f1'), n1: document.getElementById('n1'),
+        f2: document.getElementById('f2'), n2: document.getElementById('n2'),
+        ph: document.getElementById('phase'), ts: document.getElementById('timeScale')
+    };
+    const disp = {
+        f1: document.getElementById('f1-v'), n1: document.getElementById('n1-v'),
+        f2: document.getElementById('f2-v'), n2: document.getElementById('n2-v'),
+        ph: document.getElementById('ph-v'), ts: document.getElementById('ts-v')
+    };
+
+    let w, h;
+    let a1 = 0, a2 = 0;
+    let wave1 = [], wave2 = [], waveRes = [];
+
+    const radius = 20; 
+    const cx = 35;
+    const cBase = 4;
+
+    function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function animate() {
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, w, h);
+
+        const ts = parseFloat(inpt.ts.value);
+        const f1 = parseFloat(inpt.f1.value);
+        const f2 = coherentMode ? f1 : parseFloat(inpt.f2.value);
+        const n1 = parseFloat(inpt.n1.value);
+        const n2 = parseFloat(inpt.n2.value);
+        const ph = (parseFloat(inpt.ph.value) * Math.PI) / 180;
+
+        disp.f1.innerText = f1.toFixed(1);
+        disp.n1.innerText = n1.toFixed(1);
+        disp.f2.innerText = f2.toFixed(1);
+        disp.n2.innerText = n2.toFixed(1);
+        disp.ph.innerText = inpt.ph.value + "°";
+        disp.ts.innerText = ts.toFixed(1);
+
+        const v1 = cBase / n1;
+        const v2 = cBase / n2;
+        const vRes = cBase / ((n1 + n2) / 2);
+
+        const y1Pos = h * 0.2, yMid = h * 0.5, y2Pos = h * 0.8;
+
+        // Вращение
+        if (ts > 0) {
+            a1 -= 0.05 * f1 * ts;
+            if (coherentMode) {
+                a2 = a1 - ph; // Жесткая связь фаз
+            } else {
+                a2 -= 0.05 * f2 * ts; // Независимое вращение
+            }
+
+            // Точки
+            wave1.forEach(p => p.x += v1 * ts);
+            wave2.forEach(p => p.x += v2 * ts);
+            waveRes.forEach(p => p.x += vRes * ts);
+
+            wave1.unshift({ x: cx, y: y1Pos + Math.sin(a1) * radius });
+            wave2.unshift({ x: cx, y: y2Pos + Math.sin(a2) * radius });
+            waveRes.unshift({ x: cx, y: yMid + (Math.sin(a1) + Math.sin(a2)) * radius });
+
+            if (wave1.length > 1000) wave1.pop();
+            if (wave2.length > 1000) wave2.pop();
+            if (waveRes.length > 1000) waveRes.pop();
+        }
+
+        // Отрисовка
+        ctx.strokeStyle = '#1a1a1a';
+        [y1Pos, yMid, y2Pos].forEach(y => {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        });
+
+        const xV1 = Math.cos(a1) * radius, yV1 = Math.sin(a1) * radius;
+        const xV2 = Math.cos(a2) * radius, yV2 = Math.sin(a2) * radius;
+
+        const drawC = (y) => {
+            ctx.strokeStyle = '#333'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(cx, y, radius, 0, Math.PI*2); ctx.stroke();
+        };
+
+        // Верхний
+        drawC(y1Pos);
+        ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx, y1Pos); ctx.lineTo(cx + xV1, y1Pos + yV1); ctx.stroke();
+
+        // Нижний
+        drawC(y2Pos);
+        ctx.strokeStyle = '#3498db'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx, y2Pos); ctx.lineTo(cx + xV2, y2Pos + yV2); ctx.stroke();
+
+        // СРЕДНИЙ - ТРЕУГОЛЬНИК
+        drawC(yMid);
+        // Вектор 1 (из центра)
+        ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx, yMid); ctx.lineTo(cx + xV1, yMid + yV1); ctx.stroke();
+        // Вектор 2 (из конца первого)
+        ctx.strokeStyle = '#3498db'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx + xV1, yMid + yV1); ctx.lineTo(cx + xV1 + xV2, yMid + yV1 + yV2); ctx.stroke();
+        // Результирующий (пунктиром или жирным)
+        ctx.strokeStyle = '#a29bfe'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(cx, yMid); ctx.lineTo(cx + xV1 + xV2, yMid + yV1 + yV2); ctx.stroke();
+
+        const drW = (pts, clr) => {
+            if (pts.length < 2) return;
+            ctx.strokeStyle = clr; ctx.lineWidth = 2; ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            for(let i=1; i<pts.length; i++) if(pts[i].x < w) ctx.lineTo(pts[i].x, pts[i].y);
+            ctx.stroke();
+        };
+        drW(wave1, '#ff4d4d'); drW(wave2, '#3498db'); drW(waveRes, '#a29bfe');
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+</body>
+</html>
