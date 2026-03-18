@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Физика 11</title>
+    <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Экран МЕНЮ (Выбор режима и темы теперь тут) -->
+        <div id="screen-menu" class="screen">
+            <h1 id="site-title">PhysTrain</h1>
+            <div id="mode-selector"></div>
+            <div id="mode-description-box">
+                <p id="mode-desc-text"></p>
+                <select id="topic-select"></select>
+                <br>
+                <br>
+                <button class="primary-btn" onclick="startCountdown()">НАЧАТЬ</button>
+                <button onclick="window.location.href='index.html'">На главную</button>
+            </div>
+        </div>
+
+        <!-- Экран ОТСЧЕТА -->
+        <div id="screen-countdown" class="screen hidden">
+            <div id="countdown-number">3</div>
+        </div>
+
+        <!-- Экран ВОПРОСА -->
+        <div id="screen-quiz" class="screen hidden">
+            <div id="loading-overlay" class="hidden">Ждем загрузки картинки...</div>
+            <div id="hud">
+                <div class="hud-left">
+                    <span id="hud-lives"></span>
+                </div>
+                <div class="hud-right">
+                    <div id="timer-total-wrap" class="timer-mini">Всего: <span id="timer-total"></span></div>
+                    <div id="timer-question-wrap" class="timer-big">Вопрос: <span id="timer-question"></span></div>
+                </div>
+            </div>
+            <div id="question-card">
+                <div id="topic-tag"></div>
+                <p id="question-text"></p>
+                <div id="img-container" class="hidden"><img id="question-img"></div>
+                <div id="options-container"></div>
+                <button id="confirm-btn" class="hidden primary-btn" onclick="confirmMultiChoice()">ОТВЕТИТЬ</button>
+                <div id="feedback" class="hidden">
+                    <p id="feedback-text"></p>
+                    <button id="next-btn" class="primary-btn" onclick="nextQuestion()">Дальше</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран РЕЗУЛЬТАТА -->
+        <div id="screen-result" class="screen hidden">
+            <h2 id="result-title">Раунд завершен</h2>
+            <p id="result-message"></p>
+            <div class="stats-box">
+                <p>Правильных: <span id="res-score"></span></p>
+                <p>Время: <span id="res-time"></span> сек.</p>
+            </div>
+            <button class="primary-btn" onclick="location.reload()">В меню</button>
+        </div>
+    </div>
+    <script src="quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+:root {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --primary: #007bff;
+    --success: #28a745;
+    --error: #dc3545;
+    --text: #333;
+}
+
+body {
+    font-family: -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+#app {
+    width: 100%;
+    max-width: 500px;
+}
+
+header { text-align: center; margin-bottom: 20px; }
+h1 { font-size: 1.5rem; }
+
+#menu { display: flex; gap: 10px; justify-content: center; }
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#question-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#topic-tag { font-size: 0.8rem; color: gray; margin-bottom: 10px; text-transform: uppercase; }
+
+#question-img { width: 100%; border-radius: 8px; margin: 10px 0; display: none; }
+
+#options-container {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.option-btn {
+    background: #e9ecef;
+    color: var(--text);
+    text-align: left;
+    padding: 15px;
+    font-size: 1rem;
+}
+
+.option-btn.correct { background: var(--success); color: white; }
+.option-btn.wrong { background: var(--error); color: white; }
+
+#feedback {
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.hidden { display: none !important; }
+
+#menu {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap; /* Чтобы элементы переносились на новую строку */
+    margin-bottom: 20px;
+}
+
+#mode-selector button, #topic-selector button, /* Если кнопки */
+#topic-select-element /* Если select */ {
+    /* ... общие стили для кнопок ... */
+    padding: 10px 15px;
+    background: #6c757d; /* Серый для выбора */
+}
+
+#mode-selector button.active, #topic-selector button.active {
+    background: var(--primary);
+}
+
+#topic-select-element {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #e9ecef;
+}
+
+#timer {
+    margin-left: 20px;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.option-btn {
+    /* ... */
+    text-align: left;
+    padding: 15px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease; /* Плавный переход цвета */
+}
+
+/* Стиль для активного вопроса в тренировке */
+.option-btn.correct { background-color: var(--success); color: white; }
+.option-btn.wrong { background-color: var(--error); color: white; }
+
+/* Кнопка "Дальше" может менять стиль в зависимости от режима */
+#next-btn {
+    background: var(--primary);
+    margin-top: 15px;
+}
+
+:root {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --primary: #007bff;
+    --success: #28a745;
+    --error: #dc3545;
+    --selected: #0056b3;
+    --text: #333;
+}
+
+body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
+#app { width: 100%; max-width: 500px; }
+
+header { text-align: center; margin-bottom: 20px; }
+#menu { display: flex; flex-direction: column; gap: 10px; align-items: center; margin-bottom: 20px; }
+
+#question-card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+#topic-tag { font-size: 0.8rem; color: #888; text-transform: uppercase; margin-bottom: 10px; font-weight: bold; }
+#question-text { font-size: 1.1rem; line-height: 1.4; margin-bottom: 20px; }
+
+#options-container { display: grid; gap: 10px; }
+
+button { padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-size: 1rem; transition: 0.2s; background: #e9ecef; color: var(--text); text-align: left; }
+
+/* Состояния кнопок */
+button:disabled { cursor: default; }
+button.selected { background: var(--primary); color: white; }
+button.correct { background: var(--success) !important; color: white; }
+button.wrong { background: var(--error) !important; color: white; }
+
+#confirm-btn { 
+    width: 100%; margin-top: 20px; background: var(--primary); color: white; text-align: center; font-weight: bold;
+}
+
+#feedback { margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
+#feedback-text { font-style: italic; color: #555; margin-bottom: 15px; }
+
+#next-btn { width: 100%; background: #333; color: white; text-align: center; }
+
+#stats { margin-top: 15px; text-align: center; font-size: 0.9rem; color: #666; }
+.hidden { display: none !important; }
+
+:root { --bg: #f4f7f6; --primary: #007bff; --success: #28a745; --error: #dc3545; }
+body { font-family: sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+#app { width: 100%; max-width: 500px; }
+header { text-align: center; margin-bottom: 20px; }
+#menu { display: flex; flex-direction: column; gap: 10px; }
+#mode-selector { display: flex; gap: 5px; justify-content: center; }
+#mode-selector button { background: #ccc; font-size: 0.9rem; padding: 8px; text-align: center; }
+#mode-selector button.active { background: var(--primary); color: white; }
+select { padding: 10px; border-radius: 5px; }
+#question-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+#topic-tag { color: #888; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; }
+.option-btn { width: 100%; margin-bottom: 8px; text-align: left; background: #f8f9fa; }
+.option-btn.selected { background: #d1e7ff; border: 2px solid var(--primary); }
+.option-btn.correct { background: var(--success) !important; color: white; }
+.option-btn.wrong { background: var(--error) !important; color: white; }
+#confirm-btn { background: var(--primary); color: white; width: 100%; }
+#feedback { border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
+#empty-state { text-align: center; padding: 40px; color: #666; }
+
+:root { --primary: #007bff; --bg: #f8f9fa; }
+body { font-family: sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+#app { width: 90%; max-width: 500px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); position: relative; }
+
+.screen { display: flex; flex-direction: column; gap: 15px; text-align: center; }
+.hidden { display: none !important; }
+
+#loading-overlay { 
+    position: absolute; top:0; left:0; width:100%; height:100%; 
+    background: rgba(255,255,255,0.9); z-index: 10; 
+    display: flex; justify-content: center; align-items: center; font-weight: bold; 
+}
+
+#img-container img { max-width: 100%; border-radius: 10px; margin: 10px 0; }
+#hud { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; color: var(--primary); }
+
+button { padding: 15px; border-radius: 10px; border: none; background: #eee; cursor: pointer; font-size: 1rem; }
+.primary-btn { background: var(--primary); color: white; font-weight: bold; }
+
+#countdown-number { font-size: 5rem; font-weight: bold; color: var(--primary); animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+.stats-box { background: #f1f3f5; padding: 15px; border-radius: 10px; margin: 15px 0; }
+
+/* Добавь/проверь эти стили */
+#img-container {
+    width: 100%;
+    min-height: 100px; /* Чтобы не прыгало */
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+#question-img {
+    max-width: 100%;
+    max-height: 250px; /* Ограничим высоту для мобилок */
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#loading-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.85);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+:root { --primary: #007bff; --success: #28a745; --error: #dc3545; }
+
+/* Режимы в меню */
+#mode-selector { display: flex; gap: 10px; margin: 20px 0; justify-content: center; }
+.mode-btn { background: #eee; border: 2px solid transparent; }
+.mode-btn.active { border-color: var(--primary); background: #e7f1ff; font-weight: bold; }
+
+/* Подсветка ответов */
+.option-btn.selected { background: #d1e7ff; border: 2px solid var(--primary); }
+.option-btn.correct { background: var(--success) !important; color: white; }
+.option-btn.wrong { background: var(--error) !important; color: white; }
+
+/* Двойной таймер */
+#hud { display: flex; justify-content: space-between; align-items: flex-end; padding: 10px; background: #f8f9fa; border-radius: 10px; margin-bottom: 10px; }
+.timer-big { font-size: 1.2rem; font-weight: bold; color: var(--error); }
+.timer-mini { font-size: 0.8rem; color: #666; }
+
+/* Картинка */
+#img-container { width: 100%; text-align: center; margin: 10px 0; background: #eee; border-radius: 8px; overflow: hidden; }
+#question-img { max-width: 100%; max-height: 250px; display: block; margin: 0 auto; }
