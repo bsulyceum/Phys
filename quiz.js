@@ -132,6 +132,13 @@ async function showQuestion() {
     state.qTimer = cfg.timePerQuestion;
     state.isPaused = true; 
 
+    // СБРОС ИНТЕРФЕЙСА ПЕРЕД НОВЫМ ВОПРОСОМ
+    document.getElementById('feedback').classList.add('hidden'); // Прячем подсказку и кнопку "Дальше"
+    document.getElementById('confirm-btn').classList.add('hidden'); // Прячем кнопку "Ответить"
+    const container = document.getElementById('options-container');
+    container.innerHTML = ''; // Очищаем старые кнопки
+
+    
     // Загрузка картинки (оставляем твою логику с await)
     const imgEl = document.getElementById('question-img');
     const overlay = document.getElementById('loading-overlay');
@@ -173,7 +180,6 @@ async function showQuestion() {
 
     // Отрисовка
     document.getElementById('question-text').innerText = q.text;
-    const container = document.getElementById('options-container');
     container.innerHTML = '';
     
     const isMulti = allOptions.filter(o => o.isCorrect).length > 1;
@@ -201,6 +207,7 @@ async function showQuestion() {
 
     updateHUD();
 }
+
 
 function toggleSelect(idx, btn) {
     if (state.selectedIndices.includes(idx)) {
