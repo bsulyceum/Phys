@@ -1,6 +1,6 @@
 {
     "config": {
-        "siteTitle": "Физика 11: Оптика (Лицей БГУ)"
+        "siteTitle": "Физика 11: Оптика (пока что)"
     },
     "modes": {
         "study": {
@@ -20,12 +20,12 @@
             "endMessage": "Хороший результат!"
         },
         "exam": {
-            "name": "Зачет (8+)",
+            "name": "Зачет",
             "description": "Всего {totalTime/60} мин. На вопрос {timePerQuestion} сек. Всего {lives} жизней.",
             "lives": 2,
             "timePerQuestion": 15,
             "totalTime": 60,
-            "endMessage": "Зачет сдан! Ты настоящий лицеист."
+            "endMessage": "Зачет прорешан. Неплохо!"
         }
     },
     "topics": [
